@@ -7,6 +7,10 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  // Vercel deployment: pin the Nitro preset to "vercel". This override is
+  // ignored inside Lovable builds (LOVABLE_NITRO_PRESET pins Cloudflare there),
+  // so the Lovable preview/publish pipeline is unaffected.
+  nitro: { preset: "vercel" },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
