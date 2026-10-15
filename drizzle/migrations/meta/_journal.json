@@ -29,6 +29,13 @@
       "when": 1792041792586,
       "tag": "0003_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792054711202,
+      "tag": "0004_first_shine_schema_and_seed",
+      "breakpoints": true
     }
   ]
 }
