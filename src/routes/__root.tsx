@@ -12,6 +12,10 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { SiteHeader, SiteFooter } from '@/components/site-shell';
+import { Toaster } from '@/components/ui/sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { settingsQuery } from '@/lib/queries';
 
 function NotFoundComponent() {
   return (
@@ -78,16 +82,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "First Shine Furniture" },
+      { name: "description", content: "Furniture made for the spaces you call home." },
+      { property: "og:title", content: "First Shine Furniture" },
+      { property: "og:description", content: "Furniture made for the spaces you call home." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@400;450;500;600&display=swap' },
       {
         rel: "stylesheet",
         href: appCss,
@@ -95,6 +100,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(settingsQuery).catch(() => null),
+  scripts: () => [{ type: 'application/ld+json', children: JSON.stringify({ '@context': 'https://schema.org', '@type': 'FurnitureStore', name: 'First Shine Furniture', telephone: '+250784874351', address: { '@type': 'PostalAddress', streetAddress: 'Kugisozi, Beretwari', addressCountry: 'RW' }, geo: { '@type': 'GeoCoordinates', latitude: -1.9144367966455453, longitude: 30.06565279272995 }, sameAs: ['https://instagram.com/firstshinefurniture'] }) }],
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -117,11 +124,22 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+  useEffect(() => {
+    const { data } = supabase.auth.onAuthStateChange((event) => {
+      if (event !== 'SIGNED_IN' && event !== 'SIGNED_OUT' && event !== 'USER_UPDATED') return;
+      router.invalidate();
+    });
+    return () => data.subscription.unsubscribe();
+  }, [router]);
 
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+      <SiteHeader />
       <Outlet />
+      <SiteFooter />
+      <Toaster />
     </QueryClientProvider>
   );
 }
