@@ -1,0 +1,8 @@
+[
+  {"capability": "app code (routes, components, assets)", "source": "github repo first-shine-furniture", "outcome": "copied into project", "status": "verified", "next_action": "none"},
+  {"capability": "database schema (categories, products, projects, enquiries, site_settings, user_roles)", "source": "drizzle migrations", "outcome": "migrate", "status": "verified", "next_action": "none"},
+  {"capability": "seed records (categories, product concepts, projects, site settings)", "source": "migration INSERT statements", "outcome": "migrate", "status": "verified", "next_action": "products are draft by design; admin publishes them"},
+  {"capability": "auth + first-admin role assignment", "source": "supabase auth trigger", "outcome": "migrate", "status": "ready", "next_action": "user signs up at /auth; first account becomes admin"},
+  {"capability": "storage buckets (product-images, enquiry-uploads)", "source": "storage policies in migrations", "outcome": "migrate", "status": "verified", "next_action": "none"},
+  {"capability": "existing user accounts", "source": "none exported", "outcome": "pending", "status": "blocked", "next_action": "request user export if the old deployment had accounts"}
+]
